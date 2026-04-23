@@ -1,0 +1,673 @@
+google-generativeai
+fastapi
+uvicorn
+python-dotenv
+pydantic
+python-multipart
+
+
+
+YOUR ROLE
+You are a senior frontend engineer building the complete Next.js 14 UI for StudyOS — an invite-only AI-powered co-study platform for CS university students. You are not designing a generic dashboard. This is a dark, competitive, game-feel product used by students who play games, use Discord, and take their academics seriously. The aesthetic must feel like a cross between Linear, Discord, and a competitive gaming HUD.
+Read every existing file in frontend/ before touching anything. Only add or modify — never delete working code.
+
+AESTHETIC DIRECTION — commit to this fully
+Vibe: Dark competitive gaming meets serious productivity. Think "what if Notion and Valorant had a baby."
+Design tokens — these are absolute, use CSS variables everywhere:
+css:root {
+  --bg:        #0a0a0f;   /* near-black base */
+  --surface:   #13131a;   /* card backgrounds */
+  --surface2:  #1a1a24;   /* elevated surfaces, hover states */
+  --border:    #1e1e2e;   /* all borders */
+  --border2:   #2a2a3e;   /* hover borders */
+  --accent:    #6366f1;   /* electric indigo — primary interactive */
+  --accent2:   #818cf8;   /* accent hover */
+  --danger:    #f43f5e;   /* buzz button, warnings, errors */
+  --success:   #22c55e;   /* correct answers, streaks */
+  --warning:   #f59e0b;   /* streak at risk, exam soon */
+  --text:      #e2e8f0;   /* primary text */
+  --text2:     #94a3b8;   /* secondary/muted text */
+  --text3:     #475569;   /* disabled/placeholder */
+  --online:    #22c55e;   /* presence dot */
+  --offline:   #334155;   /* offline dot */
+}
+Typography:
+
+Quiz questions + all code: JetBrains Mono (via next/font/google)
+Display headings (scores, levels, ranks): Space Grotesk — bold, tight letter-spacing
+All UI text: Geist (Vercel's font — via next/font/local or next/font/google)
+
+Motion rules:
+
+Page transitions: 150ms fade + 8px upward translate, ease-out
+Cards on hover: translateY(-2px) + border lightens to --border2
+Buttons: scale(0.97) on press
+Skeleton loaders: shimmer animation, never static grey boxes
+Score changes: number counts up (use react-countup or CSS counter animation)
+Online presence dot: subtle pulse animation
+BuzzButton: rotating conic-gradient ring, 1.5s loop
+
+Layout system:
+
+Authenticated pages: persistent left sidebar (220px) + top nav (56px) + main content area
+No full-page reloads — use Next.js App Router layouts to keep sidebar persistent
+Mobile breakpoint: sidebar collapses to bottom tab bar at <768px
+
+
+FILE STRUCTURE TO CREATE
+Build this exact structure inside frontend/:
+frontend/
+├── app/
+│   ├── layout.tsx                    ← root layout: fonts, providers, theme
+│   ├── page.tsx                      ← landing page /
+│   ├── auth/
+│   │   └── page.tsx                  ← /auth GitHub login
+│   ├── dashboard/
+│   │   └── page.tsx                  ← /dashboard main hub
+│   ├── rooms/
+│   │   └── [id]/
+│   │       └── page.tsx              ← /rooms/[id] study room
+│   ├── join/
+│   │   └── [code]/
+│   │       └── page.tsx              ← /join/[code] invite handler
+│   ├── leaderboard/
+│   │   └── page.tsx                  ← /leaderboard
+│   ├── profile/
+│   │   └── [id]/
+│   │       └── page.tsx              ← /profile/[id]
+│   ├── practice/
+│   │   └── [quizId]/
+│   │       └── page.tsx              ← /practice/[quizId]
+│   ├── study-plan/
+│   │   └── page.tsx                  ← /study-plan AI agents UI
+│   └── api/
+│       └── auth/
+│           └── [...nextauth]/
+│               └── route.ts          ← NextAuth handler
+├── components/
+│   ├── layout/
+│   │   ├── Sidebar.tsx
+│   │   ├── TopNav.tsx
+│   │   ├── AuthLayout.tsx            ← wraps all authenticated pages
+│   │   └── MobileTabBar.tsx
+│   ├── ui/                           ← shadcn/ui components live here
+│   ├── rooms/
+│   │   ├── ChatPanel.tsx
+│   │   ├── QuizPanel.tsx
+│   │   ├── MembersPanel.tsx
+│   │   └── RoomHeader.tsx
+│   ├── duel/
+│   │   ├── DuelArena.tsx             ← full-screen overlay
+│   │   ├── BuzzButton.tsx
+│   │   ├── DuelEndScreen.tsx
+│   │   └── SpectatorView.tsx
+│   ├── dashboard/
+│   │   ├── RoomCard.tsx
+│   │   ├── FriendsPanel.tsx
+│   │   ├── PendingDuels.tsx
+│   │   ├── DailyQuestion.tsx
+│   │   ├── LeaderboardPeek.tsx
+│   │   └── RivalryCards.tsx
+│   ├── profile/
+│   │   ├── StatsGrid.tsx
+│   │   ├── StreakGrid.tsx
+│   │   ├── BadgeShelf.tsx
+│   │   └── FocusAreas.tsx
+│   ├── study-plan/
+│   │   ├── PlanForm.tsx
+│   │   ├── AgentActivityLog.tsx
+│   │   ├── WorldModelCard.tsx
+│   │   ├── StrategyPhases.tsx
+│   │   └── DailyTaskList.tsx
+│   └── shared/
+│       ├── SkeletonCard.tsx
+│       ├── OnlineDot.tsx
+│       ├── XPBar.tsx
+│       ├── NotificationBell.tsx
+│       ├── NotificationPanel.tsx
+│       ├── StreakBanner.tsx
+│       ├── ExamCountdownBanner.tsx
+│       └── LevelUpOverlay.tsx
+├── lib/
+│   ├── supabase.ts                   ← Supabase client
+│   ├── socket.ts                     ← Socket.io client singleton
+│   ├── auth.ts                       ← NextAuth config
+│   └── utils.ts                      ← cn(), formatDate(), etc.
+├── hooks/
+│   ├── useSocket.ts
+│   ├── usePresence.ts
+│   ├── useDuel.ts
+│   └── useNotifications.ts
+└── types/
+    └── index.ts                      ← all shared TypeScript types
+
+COMPONENT SPECIFICATIONS
+Build every component below exactly as described.
+
+components/layout/AuthLayout.tsx
+Wraps all authenticated pages. Renders persistently across route changes.
+┌─────────────────────────────────────────────────────┐
+│  TopNav (56px fixed top)                            │
+├──────────────┬──────────────────────────────────────┤
+│              │                                      │
+│  Sidebar     │   {children}                         │
+│  (220px)     │   (flex-1, scrollable)               │
+│  fixed left  │                                      │
+│              │                                      │
+└──────────────┴──────────────────────────────────────┘
+
+Sidebar is position: fixed, full height, z-index: 40
+Main content has padding-left: 220px, padding-top: 56px
+On mobile (< 768px): sidebar hidden, MobileTabBar appears at bottom
+
+
+components/layout/TopNav.tsx
+[StudyOS logo]                    [🔔 bell (badge)]  [avatar + name + level]
+
+Logo: "StudyOS" in Space Grotesk bold, accent colour
+Bell: shows red badge with unread count, click opens NotificationPanel slide-in
+User chip: avatar (24px circle) + username + Lv.{level} tag
+Background: --surface with border-bottom: 1px solid --border
+Backdrop blur: backdrop-filter: blur(12px), semi-transparent
+
+
+components/layout/Sidebar.tsx
+Sections in order:
+[StudyOS]  ← logo mark only on mobile
+
+YOUR ROOMS
+ 📚 DSA Practice     ← RoomCard mini, clicking navigates
+ 🧠 OS Concepts
+ [+ Create room]
+ [🔗 Join via code]
+
+─────────────────
+
+NAVIGATE
+ 🏠 Dashboard
+ 🏆 Leaderboard
+ 👤 My Profile
+ 🧠 Study Plan
+
+─────────────────
+
+STREAK
+ 🔥 13 days
+ [progress bar to next milestone]
+
+Active route: accent left border + accent text colour
+Room items: show coloured dot for online member count
+Hover states on all items
+
+
+app/page.tsx — Landing Page
+Full-screen dark landing. Sections:
+Hero:
+
+Headline: "Study with your squad." — Space Grotesk, 64px, white
+Sub: "AI quizzes. Live duels. Real accountability." — muted, 20px
+CTA: [Get started with GitHub →] — accent button, large
+Below CTA: "Invite-only. No strangers. No algorithms." — small, text3
+
+Feature grid (2×2):
+┌──────────────────────┬──────────────────────┐
+│  ⚡ AI Quiz Gen       │  ⚔️ Live 1v1 Duels   │
+│  Paste notes, get    │  Challenge your squad │
+│  10 MCQs instantly   │  in real time        │
+├──────────────────────┼──────────────────────┤
+│  🔥 Study Streaks    │  🧠 Weak Area AI      │
+│  Stay accountable    │  Gemini finds your   │
+│  to your squad       │  blindspots          │
+└──────────────────────┴──────────────────────┘
+
+Cards: --surface background, --border border, subtle hover lift
+Background: --bg with a faint radial gradient from --accent at 3% opacity centered top
+
+
+app/auth/page.tsx — Login
+Centered card on --bg:
+[StudyOS logo large]
+"Your squad's study headquarters."
+
+[Sign in with GitHub  🐙]   ← full width button, accent bg
+
+────────────────────────────
+Have an invite code?
+[input: Enter code...]  [Join room →]
+
+Card: --surface, rounded-2xl, border, padding 48px
+GitHub button: accent background, white text, GitHub icon left
+
+
+app/dashboard/page.tsx — Main Hub
+3-column layout:
+tsx<div className="grid grid-cols-[240px_1fr_280px] gap-4 p-6">
+  <LeftColumn />
+  <CenterFeed />
+  <RightColumn />
+</div>
+LeftColumn contains:
+
+StreakBanner (if streak at risk)
+Section: "YOUR ROOMS" — list of RoomCard components
+[+ Create Room] button → opens modal
+[🔗 Join via code] → opens code input modal
+
+RoomCard component:
+┌────────────────────────────┐
+│  📚  DSA Practice          │
+│  5 members · 🟢 3 online   │
+│  Last active: 2h ago       │
+└────────────────────────────┘
+Hover: border lightens, slight lift. Click: navigate to /rooms/[id].
+CenterFeed contains (in order):
+
+ExamCountdownBanner — if any room has exam within 7 days
+PendingDuels — list of incoming/outgoing duel challenges
+DailyQuestion — today's question card with answer CTA
+Recent activity feed — notifications rendered as timeline items
+
+PendingDuels card:
+⚔️  Raj challenged you — DSA Quiz
+     [Accept ✓]  [Decline ✗]
+Accept emits respond_challenge socket event, then opens DuelArena.
+DailyQuestion card:
+📅  Today's Question
+"What is the time complexity of..."
+[Answer now →]   🔒 Locked after answering
+RightColumn contains:
+
+Friends online list with OnlineDot + study status
+RivalryCards — top 3 rivals with W/L + Rematch button
+LeaderboardPeek — top 3 + your rank
+
+Friends list item:
+● Raj Kumar
+  studying DSA Practice · 45min today
+  [Challenge →]
+
+app/rooms/[id]/page.tsx — Study Room
+4-panel layout:
+tsx<div className="flex h-[calc(100vh-56px)]">
+  <QuizPanel className="flex-1" />           {/* ~50% */}
+  <ChatPanel className="w-[300px]" />        {/* fixed width */}
+  <MembersPanel className="w-[240px]" />     {/* fixed width */}
+</div>
+RoomHeader (above panels):
+← Dashboard   📚 DSA Practice   5 members · 🟢 3 online   [⚙️ Settings]
+              [ExamCountdownBanner if applicable]
+QuizPanel.tsx:
+Top section — quiz generation:
+[📄 Paste notes]  [📎 Upload PDF]   Topic: [___________]
+[                                                       ]
+[  Paste your lecture notes or textbook content here   ]
+[                                                       ]
+                              [✨ Generate Quiz  gpt-4o]
+Below — quiz cards list:
+┌──────────────────────────────────────────┐
+│  Binary Trees Quiz          2h ago       │
+│  10 questions · Generated                │
+│  [Practice solo]    [⚔️ Challenge to duel]│
+└──────────────────────────────────────────┘
+Past paper toggle: "📄 Past Paper mode" switches the generation prompt. Show badge "Past Paper" on those quiz cards.
+ChatPanel.tsx:
+
+Messages list: reverse-chronological scroll, auto-scroll to bottom on new message
+Message bubble: avatar (20px) + username (accent, small) + message text + timestamp (right-aligned, text3)
+System messages (user joined/left): centered, text3, italic, no bubble
+Input: fixed bottom of panel, [Type a message...] [Send →]
+Socket events: join_room on mount, listen to new_message
+
+MembersPanel.tsx:
+
+Header: "MEMBERS (5)"
+Each member: avatar + name + OnlineDot + status text
+Room score sub-table: Rank / Name / Score — top 3 only, "See all" link
+Resources section: [+ Add URL] button, list of pinned links with upvote counts
+Add exam date: [+ Add exam date] opens date picker modal
+
+
+components/duel/DuelArena.tsx — Full-screen overlay
+Mount condition: Opens as a full-screen overlay (position: fixed, inset: 0, z-index: 50) when a duel is accepted. Does not unmount the room page underneath — socket connection stays alive.
+State machine — render different UI per state:
+typescripttype DuelState =
+  | 'waiting'           // waiting for opponent to connect
+  | 'countdown'         // 3-2-1 before first question
+  | 'question_active'   // question shown, buzz available
+  | 'buzzed'            // buzz locked, answer options clickable
+  | 'answer_revealed'   // correct/wrong shown + explanation
+  | 'duel_ended'        // final scores
+waiting state:
+Waiting for Raj to connect...
+[animated spinner with opponent avatar pulsing]
+countdown state:
+[Full-screen number: 3 → 2 → 1 → GO!]
+[scale animation: number zooms from 0.5 to 1.2 then fades]
+question_active state (main HUD):
+┌─────────────────────────────────────────────────────────┐
+│  YOU  ●●●○○  3    ─── Q4/5 ───    2  ●●○○○  RAJ        │
+│          [avatar]              [avatar]                  │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│   What is the worst-case time complexity of QuickSort?  │
+│   (rendered in JetBrains Mono if code_snippet present)  │
+│                                                         │
+│   ┌──────────────────┐   ┌──────────────────┐          │
+│   │  A.  O(n)        │   │  B.  O(n²)       │          │
+│   └──────────────────┘   └──────────────────┘          │
+│   ┌──────────────────┐   ┌──────────────────┐          │
+│   │  C.  O(n log n)  │   │  D.  O(log n)    │          │
+│   └──────────────────┘   └──────────────────┘          │
+│                                                         │
+│          ┌─────────────────────────────┐               │
+│          │         🔴  BUZZ!           │               │
+│          └─────────────────────────────┘               │
+│                                                         │
+│   [💡 Hint  -5s]                    👁 2 watching      │
+└─────────────────────────────────────────────────────────┘
+BuzzButton specs:
+
+Minimum size: 140px × 64px
+Background: --danger
+Animated rotating conic-gradient ring around it when active (1.5s loop)
+On press: scale(0.95) + ring freezes + options become clickable
+Text: "BUZZ!" in Space Grotesk, bold, 18px
+
+buzzed state: Options become clickable (4s countdown timer bar at top). Question options highlight on hover.
+answer_revealed state:
+
+Correct option: --success background
+Wrong option (if selected wrong): --danger background
+Explanation text appears below options
+Score updates with count-up animation
+
+duel_ended state — DuelEndScreen.tsx:
+┌─────────────────────────────────────┐
+│         🏆  YOU WIN!                │
+│                                     │
+│    You   5  ──────────  3   Raj     │
+│                                     │
+│  +25 XP   +1 Win   🔥 Streak: 13   │
+│  [XP bar animates filling up]       │
+│                                     │
+│  Fastest answer: Q2 (1.2s) ✓       │
+│  Weakest topic this duel: Sorting   │
+│                                     │
+│  [⚔️ Rematch]   [📚 Practice Sorting]│
+│  [← Back to room]                  │
+└─────────────────────────────────────┘
+Win: green glow + trophy. Loss: muted, "Better luck next time." message.
+
+app/practice/[quizId]/page.tsx — Solo Practice
+← Back to room     Binary Trees Quiz     ████████░░ 4/10
+Question area:
+          ⏱  00:18
+          ─────────
+[Question text — JetBrains Mono if code question]
+[code block with syntax highlight if code_snippet]
+
+  ┌────────────────────────────────┐
+  │  A.  Answer option one         │  ← hover: border accent
+  └────────────────────────────────┘
+  ┌────────────────────────────────┐
+  │  B.  Answer option two         │
+  └────────────────────────────────┘
+  ... (4 options total)
+
+           [💡 Request hint]
+After answering — inline feedback (no page change):
+  ✅ Correct!  (answered in 7.3s)
+  ─────────────────────────────────
+  Explanation: [text from question.explanation]
+                                    [Next question →]
+If wrong:
+  ❌ Wrong.  Correct answer: B.  O(n²)
+  Explanation: [text]
+  This question added to your Mistake Book.
+                                    [Next question →]
+End of quiz summary card:
+  Score: 8/10  ·  Avg time: 9.2s
+  ────────────────────────────────
+  Strongest topic: Binary Trees  (5/5)
+  Weakest topic:   Sorting       (1/3)
+  ────────────────────────────────
+  [Practice Sorting →]   [Back to room]
+
+app/leaderboard/page.tsx
+Tabs: [All-time]  [This week]  [Streaks]
+Table:
+#   Avatar  Username      Score    Streak   Badges
+─────────────────────────────────────────────────
+1   [img]   Priya         1,240    21d      🥇 🎖
+2   [img]   Raj             980    14d      🥈
+3   [img]   Dev             860     8d      🥉
+─────────────────────────────────────────────────
+► 4  [img]  You [← accent highlight row]
+─────────────────────────────────────────────────
+5   [img]   Sam             790     3d
+
+Your row: background: rgba(99, 102, 241, 0.12), left accent border
+Rank 1-3: gold/silver/bronze left border colours
+Refreshes every 60s via router.refresh()
+Server component — fetch directly in the component, no client-side fetch
+
+
+app/profile/[id]/page.tsx
+Header:
+[64px avatar]  Arjun Kumar   Lv.12
+               @arjun  ·  "studying DSA rn"
+               ████████████░░  840/1000 XP to Lv.13
+               [+ Add Friend]  [⚔️ Challenge]  [🔗 Copy link]
+Main grid:
+┌─────────────────────────┬─────────────────────────────┐
+│  STATS (StatsGrid)       │  28-DAY ACTIVITY (StreakGrid)│
+│                         │                             │
+│  [48]  [31]  [64%]      │  M T W T F S S             │
+│  Duels  Win   WR        │  ■ ■ □ ■ ■ □ □             │
+│                         │  ■ □ ■ ■ ■ □ □             │
+│  [13]  [12]             │  (4 rows × 7 cols)          │
+│  Strk   Lv              │  🔥 13-day streak           │
+└─────────────────────────┴─────────────────────────────┘
+StreakGrid.tsx: 4×7 grid of 28px squares. Active day: --success. Inactive: --surface2. Today: accent border. Tooltip on hover showing the date.
+Badges shelf:
+BADGES
+🏆 First Blood   ⚡ O(1)   🎯 Clutch   📚 The Compiler
+🔒 No Sleep      🔒 Season Gold   ← blurred, show criteria on hover
+Focus areas (from backend weak area detection):
+FOCUS AREAS  — powered by AI
+Graph Traversal      42%  ██░░░░░░░░  [Practice →]
+Dynamic Programming  51%  █████░░░░░  [Practice →]
+Recursion            58%  ██████░░░░  [Practice →]
+Recent duels list:
+RECENT DUELS
+✅  vs Raj    DSA Quiz    5–3    2h ago
+❌  vs Priya  OS Quiz     2–5    1d ago
+✅  vs Dev    Trees Quiz  5–1    2d ago
+[See all duels →]
+Head-to-head (shown only when viewing another user's profile, not your own):
+HEAD TO HEAD
+You  7 ──────── 4  Raj
+Strongest topic vs them: Arrays
+Weakest topic vs them: Sorting
+[⚔️ Challenge Raj →]
+
+app/study-plan/page.tsx — AI Agents UI
+Step 1 — Input form (PlanForm.tsx):
+🧠  AI Study Planner
+    powered by Gemini · Context → Strategy → Planning
+
+┌──────────────────────────────────────────────────────┐
+│  Exam name:        [DSA Final              ]         │
+│  Days until exam:  [14      ]                        │
+│  Subjects:         [Arrays, Trees, Graphs, DP   ]    │
+│  Hours/day:        [3       ]                        │
+│  Weak areas:       [Recursion, Dynamic Programming]  │
+└──────────────────────────────────────────────────────┘
+                   [🚀 Generate my plan]
+Step 2 — Loading state (AgentActivityLog.tsx):
+Show animated log that updates as each agent responds:
+AGENT ACTIVITY
+┌──────────────────────────────────────────────────────┐
+│ ✅  Context Agent    Building world model...  09:42:01│
+│ ✅  Strategy Agent   Creating strategy...     09:42:03│
+│ ⏳  Planning Agent   Generating tasks...      (live) │
+│ ○   Orchestrator     Waiting...                      │
+└──────────────────────────────────────────────────────┘
+[progress bar animating]
+Each line fades in as the API response arrives. Use EventLog data from bridge response.
+Step 3 — Results:
+WorldModelCard.tsx:
+YOUR SITUATION
+───────────────
+[Gemini analysis text — wrapped in a styled blockquote card]
+[surface bg, accent left border, JetBrains Mono text]
+StrategyPhases.tsx — 3 tabs:
+[Week 1: Foundation ✅]  [Week 2: Application]  [Week 3: Mastery]
+Content changes per tab — strategy text rendered in prose
+DailyTaskList.tsx:
+TODAY'S TASKS
+─────────────────────────────────────────────────────
+1  Recursion: Base cases           45 min   Medium
+   "Solidify fundamentals before tackling DP"
+   [✓ Mark done]
+
+2  DP: Memoization patterns        60 min   Hard
+   "Your weakest area — structured practice needed"
+   [✓ Mark done]
+
+3  Arrays: Two-pointer problems    30 min   Easy
+   "Quick win to build confidence"
+   [✓ Mark done]
+─────────────────────────────────────────────────────
+[Regenerate plan 🔄]
+
+components/shared/NotificationPanel.tsx
+Slide-in from top-right, position: fixed, z-index: 60.
+┌────────────────────────────────┐
+│  Notifications    [✓ Mark all] │
+├────────────────────────────────┤
+│ 🔴  Raj challenged you         │
+│     DSA Quiz · 2min ago        │
+│     [Accept ✓]  [Decline ✗]   │
+├────────────────────────────────┤
+│ 🟢  Priya came online          │
+│     studying OS · just now     │
+├────────────────────────────────┤
+│ 🎖  Badge unlocked!            │
+│     "The Compiler" — 10 quizzes│
+├────────────────────────────────┤
+│ 👤  Dev sent you a friend req  │
+│     [Accept]  [Ignore]         │
+└────────────────────────────────┘
+Click outside to dismiss. Unread count badge on bell icon.
+
+components/shared/LevelUpOverlay.tsx
+Full-screen overlay triggered by socket level_up event. Auto-dismisses after 3s.
+[confetti particle burst — CSS keyframes]
+
+      ⬆️  LEVEL UP!
+
+    You are now  Level 13
+
+   [XP bar animates from 0 to new value]
+
+       [Continue →]
+Background: rgba(0,0,0,0.85) blur. Text: Space Grotesk, large.
+
+components/shared/StreakBanner.tsx
+Shown on Dashboard and Room pages if streak > 2 and user not active today.
+┌────────────────────────────────────────────────────┐
+│ ⚠️  Your 13-day streak is at risk!                  │
+│    Complete a quiz or duel today to keep it alive. │
+│    [Study now →]                          [✕]      │
+└────────────────────────────────────────────────────┘
+Background: rgba(245, 158, 11, 0.12), border: --warning.
+
+SOCKET EVENTS — wire these up in hooks
+hooks/useSocket.ts — singleton socket connection:
+typescript// Connect once on auth, persist across route changes
+// Auth token from: getSession() → session.user.token
+// Reconnect on token refresh
+hooks/useDuel.ts — manages DuelArena state machine:
+typescript// Events to listen: duel_started, buzz_locked, answer_result, duel_ended
+// Events to emit: respond_challenge, player_buzz, submit_answer
+// State: DuelState type (waiting | countdown | question_active | buzzed | answer_revealed | duel_ended)
+hooks/usePresence.ts — online/offline per room:
+typescript// Listen: room_presence, friend_online, friend_offline
+// Maintain: Map<userId, { online: boolean, statusText: string }>
+hooks/useNotifications.ts — realtime notification badge:
+typescript// Listen: friend_request_received, challenge_received, friend_online, level_up
+// Maintain: unreadCount, notifications[]
+
+DATA FETCHING RULES
+
+Server components (no 'use client'): /leaderboard, /profile/[id] static parts, /rooms/[id] initial data
+Client components ('use client'): ChatPanel, DuelArena, MembersPanel, NotificationPanel, anything using socket or real-time state
+Loading states: Every async server component must have a loading.tsx sibling file with Skeleton UI
+Error states: Every page must have an error.tsx sibling showing a recoverable error card (not a crash)
+No useEffect for data fetching — use server components or SWR/react-query for client-side polling
+
+
+SKELETON LOADING PATTERN
+Every card that fetches data must show this pattern while loading:
+tsx// loading.tsx for each page
+export default function Loading() {
+  return (
+    <div className="space-y-3">
+      <Skeleton className="h-24 w-full rounded-xl" />
+      <Skeleton className="h-24 w-full rounded-xl" />
+      <Skeleton className="h-24 w-full rounded-xl" />
+    </div>
+  )
+}
+Skeleton shimmer animation:
+css@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+RESPONSIVE RULES
+BreakpointBehaviour>= 1280pxFull 3-column dashboard, 4-panel room1024–1279pxRight column collapses to drawer768–1023pxSingle column, sidebar becomes top drawer< 768pxSidebar → bottom tab bar. Room panels stack vertically
+
+WHAT NOT TO DO
+
+Never use white or #ffffff anywhere — dark theme only
+Never use Inter or Roboto as fonts
+Never use alert() or confirm() — use shadcn Dialog or Toast
+Never show a blank black screen while loading — always Skeleton
+Never put SUPABASE_SERVICE_ROLE_KEY in any client-side code
+Never use localStorage in server components
+Never navigate to a new page for the DuelArena — it is always a full-screen overlay
+Never use any in TypeScript
+Never hardcode user IDs, room IDs, or API URLs — always use env vars and dynamic routes
+
+
+VERIFICATION CHECKLIST
+Before declaring the UI done, every item must pass:
+
+ npm run dev starts with 0 errors
+ npx tsc --noEmit passes with 0 errors
+ Landing page renders in under 1s (static, no data fetch)
+ GitHub OAuth login creates user row in Supabase, redirects to /dashboard
+ Dashboard renders all 3 columns with skeleton → data transition
+ Room page: chat message sent from Tab A appears in Tab B
+ Quiz generated from pasted text and displayed as cards
+ Duel challenged, accepted, full 5-question flow works
+ DuelArena opens as overlay, room underneath stays mounted
+ Practice mode stores practice_attempts rows in Supabase
+ Leaderboard highlights logged-in user row
+ Profile shows streak grid with correct active days
+ Study plan form submits to bridge, agent log animates, results render
+ Notification bell shows unread count, panel slides in on click
+ Level-up overlay fires on level_up socket event
+ All pages have Skeleton loading states
+ Mobile view: sidebar replaced by bottom tab bar
+ No white screens, no console.error in production build
+
+
+Start by reading every existing file in frontend/. Map what exists. Then build what is missing in the order: layout → shared components → pages → hooks. Test each page before moving to the next.

@@ -1,5 +1,0 @@
-google-generativeai
-flask
-flask-cors
-python-dotenv
-pydantic
