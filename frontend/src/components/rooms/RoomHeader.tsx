@@ -1,9 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Settings, Users, Copy, Check } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatRelativeTime } from '@/lib/utils'
 import OnlineDot from '@/components/shared/OnlineDot'
 
 interface Room {
@@ -21,6 +20,15 @@ interface RoomHeaderProps {
 }
 
 export default function RoomHeader({ room, onSettings }: RoomHeaderProps) {
+  const [copied, setCopied] = useState(false)
+  const handleCopy = () => {
+    const code = (room as any).invite_code
+    if (!code) return
+    navigator.clipboard.writeText(code)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+
   return (
     <div className="flex items-center justify-between p-4 bg-surface border-b border-border">
       <div className="flex items-center gap-4">
@@ -45,14 +53,25 @@ export default function RoomHeader({ room, onSettings }: RoomHeaderProps) {
         </div>
       </div>
       
-      {onSettings && (
-        <button 
-          onClick={onSettings}
-          className="p-2 rounded-lg hover:bg-surface2 transition-colors"
-        >
-          <Settings className="w-5 h-5 text-text3" />
-        </button>
-      )}
+      <div className="flex items-center gap-2">
+        {(room as any).invite_code && (
+          <button
+            onClick={handleCopy}
+            className="flex items-center gap-2 px-3 py-2 bg-surface2 text-text text-xs rounded-lg hover:bg-border"
+          >
+            {copied ? <Check className="w-3 h-3 text-success" /> : <Copy className="w-3 h-3" />}
+            {copied ? 'Copied' : `Invite: ${(room as any).invite_code}`}
+          </button>
+        )}
+        {onSettings && (
+          <button 
+            onClick={onSettings}
+            className="p-2 rounded-lg hover:bg-surface2 transition-colors"
+          >
+            <Settings className="w-5 h-5 text-text3" />
+          </button>
+        )}
+      </div>
     </div>
   )
 }

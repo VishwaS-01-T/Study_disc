@@ -1,0 +1,20 @@
+[
+  {
+    "id": "8405be9d-ba6d-429b-8f66-55ad9c90488c:bedbcb63-396c-45c1-9fe6-0f294a95880f",
+    "room_id": "8405be9d-ba6d-429b-8f66-55ad9c90488c",
+    "user_id": "bedbcb63-396c-45c1-9fe6-0f294a95880f",
+    "joined_at": "2026-04-28T09:15:01.456Z"
+  },
+  {
+    "id": "333fbe52-82f4-40da-92c9-fcf311932e0c:bedbcb63-396c-45c1-9fe6-0f294a95880f",
+    "room_id": "333fbe52-82f4-40da-92c9-fcf311932e0c",
+    "user_id": "bedbcb63-396c-45c1-9fe6-0f294a95880f",
+    "joined_at": "2026-04-28T09:15:05.202Z"
+  },
+  {
+    "id": "029e79dd-752e-43da-b610-ab7dd00330b4:bedbcb63-396c-45c1-9fe6-0f294a95880f",
+    "room_id": "029e79dd-752e-43da-b610-ab7dd00330b4",
+    "user_id": "bedbcb63-396c-45c1-9fe6-0f294a95880f",
+    "joined_at": "2026-04-28T09:35:35.071Z"
+  }
+]

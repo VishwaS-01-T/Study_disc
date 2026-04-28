@@ -12,37 +12,32 @@ interface WeakArea {
 }
 
 export default function ProfilePage() {
-  const [profile] = useState({
-    username: 'DemoUser',
-    score: 1250,
-    xp: 450,
-    level: 5,
-    streak: 7,
+  const [profile, setProfile] = useState({
+    username: '',
+    score: 0,
+    xp: 0,
+    level: 1,
+    streak: 0,
   })
-  const [stats] = useState({
-    wins: 23,
-    losses: 12,
-    winRate: 66,
+  const [stats, setStats] = useState({
+    wins: 0,
+    losses: 0,
+    winRate: 0,
   })
-  const [badges] = useState([
-    { id: '1', badge_key: 'First Duel', earned_at: '2024-01-15' },
-    { id: '2', badge_key: '7 Day Streak', earned_at: '2024-02-01' },
-  ])
-  const [streakDays] = useState(() => {
-    const days: boolean[] = []
-    for (let i = 27; i >= 0; i--) {
-      days.push(Math.random() > 0.3)
-    }
-    return days
-  })
+  const [badges, setBadges] = useState<{ id: string; badge_key: string; earned_at: string }[]>([])
+  const [streakDays, setStreakDays] = useState<boolean[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [weakAreas, setWeakAreas] = useState<WeakArea[]>([])
   const [analyzing, setAnalyzing] = useState(false)
 
   const currentLevel = profile.level
   const xpToNextLevel = xpForLevel(currentLevel + 1)
-  const xpProgress = ((profile.xp - xpForLevel(currentLevel)) / (xpToNextLevel - xpForLevel(currentLevel))) * 100
+  const xpProgress = xpToNextLevel > 0
+    ? ((profile.xp - xpForLevel(currentLevel)) / (xpToNextLevel - xpForLevel(currentLevel))) * 100
+    : 0
 
-  const analyzeWeakAreas = async () => {
+  const analyzeWeakAreas = async (userId?: string) => {
     setAnalyzing(true)
     
     try {
@@ -50,7 +45,7 @@ export default function ProfilePage() {
       const res = await fetch(`${backendUrl}/api/weak-areas/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: 'demo-user' }),
+        body: JSON.stringify({ userId }),
       })
       
       const data = await res.json()
@@ -58,20 +53,73 @@ export default function ProfilePage() {
         setWeakAreas(data.weakAreas)
       }
     } catch (e) {
-      // Demo data
-      setWeakAreas([
-        { topic: 'Recursion', accuracy: 45, attempts: 12 },
-        { topic: 'Binary Trees', accuracy: 58, attempts: 8 },
-        { topic: 'Dynamic Programming', accuracy: 62, attempts: 15 },
-      ])
+      setWeakAreas([])
     }
     
     setAnalyzing(false)
   }
 
   useEffect(() => {
-    analyzeWeakAreas()
+    const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null
+    if (!userStr) {
+      setError('Please sign in to view your profile.')
+      setLoading(false)
+      return
+    }
+    const user = JSON.parse(userStr)
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    
+    Promise.all([
+      fetch(`${backendUrl}/api/users/${user.id}`).then(r => r.json()),
+      fetch(`${backendUrl}/api/users/${user.id}/stats`).then(r => r.json()),
+    ])
+      .then(([userData, statsData]) => {
+        if (userData.user) {
+          setProfile({
+            username: userData.user.username,
+            score: userData.user.score || 0,
+            xp: userData.user.xp || 0,
+            level: userData.user.level || 1,
+            streak: userData.user.streak || 0,
+          })
+        }
+        if (statsData.stats) {
+          setStats({
+            wins: statsData.stats.wins || 0,
+            losses: statsData.stats.losses || 0,
+            winRate: statsData.stats.winRate || 0,
+          })
+          setBadges(statsData.stats.badges || [])
+        }
+      })
+      .catch(() => setError('Failed to load profile data.'))
+      .finally(() => setLoading(false))
+
+    const days: boolean[] = []
+    for (let i = 27; i >= 0; i--) {
+      days.push(false)
+    }
+    setStreakDays(days)
+
+    analyzeWeakAreas(user.id)
   }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <p className="text-danger text-lg mb-4">{error}</p>
+        <Link href="/login" className="text-accent hover:underline">Return to login</Link>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">

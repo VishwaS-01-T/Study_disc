@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Zap, Check, X, Clock, Trophy, Swords, Loader2, Target, AlertTriangle } from 'lucide-react'
@@ -18,6 +18,9 @@ export default function DuelPage() {
   const params = useParams()
   const router = useRouter()
   const duelId = params.id as string
+  const [loading, setLoading] = useState(true)
+  const [duel, setDuel] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
   const [state, setState] = useState<'lobby' | 'playing' | 'completed'>('lobby')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
@@ -27,16 +30,34 @@ export default function DuelPage() {
   const [buzzActive, setBuzzActive] = useState(true)
   const [showFeedback, setShowFeedback] = useState(false)
   const [results, setResults] = useState<{ correct: boolean }[]>([])
-
-  const questions: Question[] = [
-    { id: '1', text: 'What is the time complexity of binary search?', options: ['O(n)', 'O(log n)', 'O(n log n)', 'O(1)'], correct: 1, topic: 'Algorithms' },
-    { id: '2', text: 'Which data structure uses LIFO?', options: ['Queue', 'Stack', 'Array', 'Tree'], correct: 1, topic: 'Data Structures' },
-    { id: '3', text: 'What does RAM stand for?', options: ['Random Access Memory', 'Read Only Memory', 'Run Anywhere Memory', 'Rapid Access Module'], correct: 0, topic: 'Computer Architecture' },
-    { id: '4', text: 'Which sorting algorithm is fastest on average?', options: ['Bubble Sort', 'Quick Sort', 'Insertion Sort', 'Selection Sort'], correct: 1, topic: 'Algorithms' },
-    { id: '5', text: 'What is the base case in recursion?', options: ['The first call', 'The smallest problem', 'The recursive call', 'The return value'], correct: 1, topic: 'Recursion' },
-  ]
+  const [questions, setQuestions] = useState<Question[]>([])
 
   const timerRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    const fetchDuel = async () => {
+      try {
+        const duelRes = await fetch(`${backendUrl}/api/duels/${duelId}`)
+        if (!duelRes.ok) throw new Error('Duel not found')
+        const duelData = await duelRes.json()
+        setDuel(duelData.duel)
+
+        if (duelData.duel?.quiz_id) {
+          const quizRes = await fetch(`${backendUrl}/api/quizzes/${duelData.duel.quiz_id}`)
+          if (!quizRes.ok) throw new Error('Quiz not found')
+          const quizData = await quizRes.json()
+          setQuestions(quizData.quiz?.questions || [])
+        }
+      } catch (err: any) {
+        setError(err.message || 'Failed to load duel')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (duelId) fetchDuel()
+  }, [duelId])
 
   const startTimer = () => {
     setTimeLeft(30)
@@ -57,7 +78,7 @@ export default function DuelPage() {
     if (selectedAnswer === null) {
       setAnswerState('incorrect')
       setShowFeedback(true)
-      setResults([...results, { correct: false }])
+      setResults(prev => [...prev, { correct: false }])
       setTimeout(() => nextQuestion(), 1500)
     }
   }
@@ -70,8 +91,8 @@ export default function DuelPage() {
     setAnswerState(isCorrect ? 'correct' : 'incorrect')
     setShowFeedback(true)
     
-    if (isCorrect) setScore(score + 1)
-    setResults([...results, { correct: isCorrect }])
+    if (isCorrect) setScore(prev => prev + 1)
+    setResults(prev => [...prev, { correct: isCorrect }])
     
     setTimeout(() => {
       nextQuestion()
@@ -101,6 +122,39 @@ export default function DuelPage() {
   }
 
   const currentQuestion = questions[currentIndex]
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-accent" />
+      </div>
+    )
+  }
+
+  if (error || questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+        <p className="text-danger text-lg mb-4">{error || 'No questions for this duel'}</p>
+        <Link href="/dashboard" className="text-accent hover:underline">Go to dashboard</Link>
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    if (state !== 'completed' || !duel) return
+    const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null
+    const user = userStr ? JSON.parse(userStr) : null
+    if (!user?.id) return
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    fetch(`${backendUrl}/api/duels/${duelId}/submit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: user.id,
+        answers: results.map((r, i) => ({ questionId: questions[i].id, selected: r.correct ? questions[i].correct : -1 })),
+      }),
+    }).catch(() => {})
+  }, [state, duel, duelId, results, questions])
 
   return (
     <div className="min-h-screen bg-background">

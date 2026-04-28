@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { UserPlus, Link as LinkIcon, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -36,24 +36,69 @@ export default function MembersPanel({
   const [showAddResource, setShowAddResource] = useState(false)
   const [resourceUrl, setResourceUrl] = useState('')
   const [resourceLabel, setResourceLabel] = useState('')
+  const [members, setMembers] = useState<Member[]>(initialMembers)
+  const [resources, setResources] = useState<Resource[]>(initialResources)
+  const [loading, setLoading] = useState(true)
 
-  const defaultMembers: Member[] = initialMembers.length > 0 ? initialMembers : [
-    { id: '1', username: 'Raj', online: true, status: 'studying', score: 450 },
-    { id: '2', username: 'Priya', online: true, status: 'active', score: 380 },
-    { id: '3', username: 'Dev', online: false, status: 'offline', score: 290 },
-    { id: '4', username: 'You', online: true, status: 'active', score: 1250 },
-  ]
+  useEffect(() => {
+    if (initialMembers.length > 0) {
+      setMembers(initialMembers)
+      setResources(initialResources)
+      setLoading(false)
+      return
+    }
 
-  const defaultResources: Resource[] = initialResources.length > 0 ? initialResources : [
-    { id: '1', url: 'https://leetcode.com', label: 'LeetCode', upvotes: 5 },
-    { id: '2', url: 'https://geeksforgeeks.org', label: 'GFG', upvotes: 3 },
-  ]
+    const fetchData = async () => {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+      const roomId = window.location.pathname.split('/').pop()
+      if (!roomId) {
+        setLoading(false)
+        return
+      }
 
-  const topMembers = [...defaultMembers].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 3)
+      try {
+        const [membersRes, resourcesRes] = await Promise.all([
+          fetch(`${backendUrl}/api/rooms/${roomId}/members`),
+          fetch(`${backendUrl}/api/rooms/${roomId}/resources`),
+        ])
+        const membersData = await membersRes.json()
+        const resourcesData = await resourcesRes.json()
+        setMembers(membersData.members || [])
+        setResources(resourcesData.resources || [])
+      } catch {
+        setMembers([])
+        setResources([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [initialMembers, initialResources])
+
+  const topMembers = [...members].sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 3)
 
   const handleAddResource = () => {
-    if (resourceUrl.trim() && onAddResource) {
-      onAddResource(resourceUrl, resourceLabel)
+    if (resourceUrl.trim() && resourceLabel.trim()) {
+      if (onAddResource) {
+        onAddResource(resourceUrl, resourceLabel)
+      }
+      const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null
+      const user = userStr ? JSON.parse(userStr) : null
+      const roomId = window.location.pathname.split('/').pop()
+      if (user?.id && roomId) {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+        fetch(`${backendUrl}/api/rooms/${roomId}/resources`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: resourceUrl, label: resourceLabel, userId: user.id }),
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.resource) setResources(prev => [data.resource, ...prev])
+          })
+          .catch(() => {})
+      }
       setResourceUrl('')
       setResourceLabel('')
       setShowAddResource(false)
@@ -63,12 +108,16 @@ export default function MembersPanel({
   return (
     <div className="flex flex-col h-full bg-surface border border-border rounded-xl">
       <div className="p-3 border-b border-border">
-        <h3 className="font-display text-sm font-semibold text-text">MEMBERS ({defaultMembers.length})</h3>
+        <h3 className="font-display text-sm font-semibold text-text">MEMBERS ({members.length})</h3>
       </div>
       
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
         <div className="space-y-2">
-          {defaultMembers.map((member) => (
+          {loading ? (
+            <div className="text-sm text-text3">Loading members...</div>
+          ) : members.length === 0 ? (
+            <div className="text-sm text-text3">No members yet</div>
+          ) : members.map((member) => (
             <div
               key={member.id}
               className="flex items-center gap-2 p-2 rounded-lg hover:bg-surface2 transition-colors"
@@ -145,7 +194,7 @@ export default function MembersPanel({
           )}
           
           <div className="space-y-2">
-            {defaultResources.map((resource) => (
+            {resources.map((resource) => (
               <a
                 key={resource.id}
                 href={resource.url}

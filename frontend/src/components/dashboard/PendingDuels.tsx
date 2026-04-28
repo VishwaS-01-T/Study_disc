@@ -1,7 +1,7 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Swords, Check, X } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 interface Duel {
   id: string
@@ -12,14 +12,68 @@ interface Duel {
 
 interface PendingDuelsProps {
   duels?: Duel[]
+  onAccept?: (duelId: string) => void
+  onDecline?: (duelId: string) => void
 }
 
-export default function PendingDuels({ duels = [] }: PendingDuelsProps) {
-  const defaultDuels: Duel[] = duels.length > 0 ? duels : [
-    { id: '1', challenger: 'Raj', quiz_title: 'DSA Quiz', direction: 'incoming' },
-  ]
+export default function PendingDuels({ duels = [], onAccept, onDecline }: PendingDuelsProps) {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [pending, setPending] = useState<Duel[]>(duels)
 
-  if (defaultDuels.length === 0) return null
+  const [processedDuels, setProcessedDuels] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    if (duels.length > 0) return
+    const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null
+    if (!userStr) return
+    const user = JSON.parse(userStr)
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    setLoading(true)
+    fetch(`${backendUrl}/api/duels/pending/${user.id}`)
+      .then(res => res.json())
+      .then(data => setPending(data.duels || []))
+      .catch(() => setError('Failed to load duels'))
+      .finally(() => setLoading(false))
+  }, [duels.length])
+
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        <h3 className="text-xs font-semibold text-text3 uppercase tracking-wider">Pending Duels</h3>
+        <p className="text-sm text-text3">Loading...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-3">
+        <h3 className="text-xs font-semibold text-text3 uppercase tracking-wider">Pending Duels</h3>
+        <p className="text-sm text-danger">{error}</p>
+      </div>
+    )
+  }
+
+  if (pending.length === 0) return null
+
+  const handleAccept = async (duelId: string) => {
+    setProcessedDuels(prev => new Set(prev).add(duelId))
+    if (onAccept) {
+      onAccept(duelId)
+    }
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    fetch(`${backendUrl}/api/duels/${duelId}/accept`, { method: 'POST' }).catch(() => {})
+  }
+
+  const handleDecline = async (duelId: string) => {
+    setProcessedDuels(prev => new Set(prev).add(duelId))
+    if (onDecline) {
+      onDecline(duelId)
+    }
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    fetch(`${backendUrl}/api/duels/${duelId}/decline`, { method: 'POST' }).catch(() => {})
+  }
 
   return (
     <div className="space-y-3">
@@ -28,7 +82,7 @@ export default function PendingDuels({ duels = [] }: PendingDuelsProps) {
       </h3>
       
       <div className="space-y-2">
-        {defaultDuels.map((duel) => (
+        {pending.map((duel) => (
           <div
             key={duel.id}
             className="p-3 bg-surface border border-border rounded-xl"
@@ -50,13 +104,19 @@ export default function PendingDuels({ duels = [] }: PendingDuelsProps) {
               </div>
             </div>
             
-            {duel.direction === 'incoming' && (
+            {duel.direction === 'incoming' && !processedDuels.has(duel.id) && (
               <div className="flex gap-2 mt-3">
-                <button className="flex-1 flex items-center justify-center gap-1 py-2 bg-success text-white text-sm font-medium rounded-lg hover:bg-success/80">
+                <button 
+                  onClick={() => handleAccept(duel.id)}
+                  className="flex-1 flex items-center justify-center gap-1 py-2 bg-success text-white text-sm font-medium rounded-lg hover:bg-success/80"
+                >
                   <Check className="w-4 h-4" />
                   Accept
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-1 py-2 bg-surface2 text-text text-sm font-medium rounded-lg hover:bg-border">
+                <button 
+                  onClick={() => handleDecline(duel.id)}
+                  className="flex-1 flex items-center justify-center gap-1 py-2 bg-surface2 text-text text-sm font-medium rounded-lg hover:bg-border"
+                >
                   <X className="w-4 h-4" />
                   Decline
                 </button>

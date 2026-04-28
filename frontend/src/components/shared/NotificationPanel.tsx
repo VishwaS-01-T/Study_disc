@@ -18,9 +18,11 @@ interface Notification {
 interface NotificationPanelProps {
   onClose: () => void
   notifications?: Notification[]
+  onAccept?: (notificationId: string) => void
+  onDecline?: (notificationId: string) => void
 }
 
-export default function NotificationPanel({ onClose, notifications = [] }: NotificationPanelProps) {
+export default function NotificationPanel({ onClose, notifications = [], onAccept, onDecline }: NotificationPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -105,10 +107,16 @@ export default function NotificationPanel({ onClose, notifications = [] }: Notif
             
             {notification.type === 'challenge' && !notification.read && (
               <div className="flex gap-2 mt-2 ml-7">
-                <button className="flex-1 py-1.5 bg-success text-white text-xs font-medium rounded-lg hover:bg-success/80">
+                <button 
+                  onClick={() => onAccept?.(notification.id)}
+                  className="flex-1 py-1.5 bg-success text-white text-xs font-medium rounded-lg hover:bg-success/80"
+                >
                   Accept
                 </button>
-                <button className="flex-1 py-1.5 bg-surface2 text-text text-xs font-medium rounded-lg hover:bg-border">
+                <button 
+                  onClick={() => onDecline?.(notification.id)}
+                  className="flex-1 py-1.5 bg-surface2 text-text text-xs font-medium rounded-lg hover:bg-border"
+                >
                   Decline
                 </button>
               </div>

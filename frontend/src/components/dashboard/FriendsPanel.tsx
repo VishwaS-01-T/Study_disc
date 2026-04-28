@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Swords } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -19,11 +20,30 @@ interface FriendsPanelProps {
 }
 
 export default function FriendsPanel({ friends = [] }: FriendsPanelProps) {
-  const defaultFriends: Friend[] = friends.length > 0 ? friends : [
-    { id: '1', username: 'Raj Kumar', online: true, status: 'studying DSA Practice', study_time_today: 45 },
-    { id: '2', username: 'Priya', online: true, status: 'studying OS', study_time_today: 30 },
-    { id: '3', username: 'Dev', online: false, status: 'offline', study_time_today: 0 },
-  ]
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [friendList, setFriendList] = useState<Friend[]>(friends)
+
+  useEffect(() => {
+    if (friends.length > 0) return
+    const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null
+    if (!userStr) return
+    const user = JSON.parse(userStr)
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    setLoading(true)
+    fetch(`${backendUrl}/api/users/${user.id}/friends`)
+      .then(res => res.json())
+      .then(data => setFriendList((data.friends || []).map((f: any) => ({
+        id: f.id,
+        username: f.username,
+        avatar_url: f.avatar_url,
+        online: false,
+        status: 'offline',
+        study_time_today: 0,
+      }))))
+      .catch(() => setError('Failed to load friends'))
+      .finally(() => setLoading(false))
+  }, [friends.length])
 
   return (
     <div className="space-y-3">
@@ -31,11 +51,15 @@ export default function FriendsPanel({ friends = [] }: FriendsPanelProps) {
         Friends Online
       </h3>
       
-      {defaultFriends.length === 0 ? (
-        <p className="text-sm text-text3">No friends online</p>
+      {loading ? (
+        <p className="text-sm text-text3">Loading friends...</p>
+      ) : error ? (
+        <p className="text-sm text-danger">{error}</p>
+      ) : friendList.length === 0 ? (
+        <p className="text-sm text-text3">No friends yet</p>
       ) : (
         <div className="space-y-2">
-          {defaultFriends.map((friend) => (
+          {friendList.map((friend) => (
             <div
               key={friend.id}
               className="flex items-center gap-3 p-2 rounded-lg hover:bg-surface2 transition-colors"

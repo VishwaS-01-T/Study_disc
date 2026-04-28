@@ -1,10 +1,8 @@
 {
   "/login/page": "app/login/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/leaderboard/page": "app/leaderboard/page.js",
   "/rooms/[id]/page": "app/rooms/[id]/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/page": "app/page.js",
-  "/study-plan/page": "app/study-plan/page.js",
-  "/auth/page": "app/auth/page.js"
+  "/rooms/create/page": "app/rooms/create/page.js",
+  "/leaderboard/page": "app/leaderboard/page.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
 }

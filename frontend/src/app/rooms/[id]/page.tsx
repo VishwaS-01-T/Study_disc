@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
+import { io, Socket } from 'socket.io-client'
 import AuthLayout from '@/components/layout/AuthLayout'
 import RoomHeader from '@/components/rooms/RoomHeader'
 import ChatPanel from '@/components/rooms/ChatPanel'
@@ -50,54 +51,80 @@ export default function RoomPage() {
   const [room, setRoom] = useState<Room | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [showDuel, setShowDuel] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [socket, setSocket] = useState<Socket | null>(null)
   
-  const user: User = {
-    id: '1',
-    username: 'DemoUser',
-    avatar_url: null,
-    level: 5,
-  }
-  
-  const questions: Question[] = [
-    { id: '1', text: 'What is the time complexity of binary search?', options: ['O(n)', 'O(log n)', 'O(n log n)', 'O(1)'], correct: 1, explanation: 'Binary search divides the search space in half each iteration, resulting in O(log n) time complexity.', topic: 'Algorithms' },
-    { id: '2', text: 'Which data structure uses LIFO?', options: ['Queue', 'Stack', 'Array', 'Tree'], correct: 1, explanation: 'Stack follows Last In First Out (LIFO) principle.', topic: 'Data Structures' },
-    { id: '3', text: 'What does RAM stand for?', options: ['Random Access Memory', 'Read Only Memory', 'Run Anywhere Memory', 'Rapid Access Module'], correct: 0, explanation: 'RAM stands for Random Access Memory.', topic: 'Computer Architecture' },
-    { id: '4', text: 'Which sorting algorithm is fastest on average?', options: ['Bubble Sort', 'Quick Sort', 'Insertion Sort', 'Selection Sort'], correct: 1, explanation: 'Quick Sort has O(n log n) average time complexity.', topic: 'Algorithms' },
-    { id: '5', text: 'What is the base case in recursion?', options: ['The first call', 'The smallest problem', 'The recursive call', 'The return value'], correct: 1, explanation: 'Base case is the smallest problem that can be solved directly without further recursion.', topic: 'Recursion' },
-  ]
+  const questions: Question[] = []
 
   useEffect(() => {
-    setTimeout(() => {
-      setRoom({
-        id: roomId,
-        name: 'DSA Practice',
-        emoji: '📚',
-        topic: 'Data Structures & Algorithms',
-        member_count: 5,
-        online_count: 3,
+    const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null
+    if (!userStr) {
+      window.location.href = '/login'
+      return
+    }
+    const currentUser = JSON.parse(userStr)
+    setUser(currentUser)
+
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+
+    fetch(`${backendUrl}/api/rooms/${roomId}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.room) {
+          setRoom(data.room)
+          if (currentUser?.id) {
+            fetch(`${backendUrl}/api/rooms/${roomId}/join`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ userId: currentUser.id }),
+            }).catch(() => {})
+          }
+        }
+        setLoading(false)
       })
-      setMessages([
-        { id: '1', user_id: 'other', content: 'Hey everyone! Ready to study?', created_at: new Date(Date.now() - 3600000).toISOString(), username: 'Raj' },
-        { id: '2', user_id: 'me', content: 'Yeah lets go!', created_at: new Date(Date.now() - 3000000).toISOString(), username: 'You' },
-        { id: '3', user_id: 'other', content: 'Should we do some quiz practice?', created_at: new Date(Date.now() - 1800000).toISOString(), username: 'Priya' },
-      ])
-      setLoading(false)
-    }, 300)
+      .catch(() => setLoading(false))
+
+    fetch(`${backendUrl}/api/rooms/${roomId}/messages`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.messages) {
+          // Sort messages by created_at ascending
+          const sorted = data.messages.slice().sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+          setMessages(sorted)
+        }
+      })
+      .catch(() => setMessages([]))
+
+    const newSocket = io(backendUrl, { transports: ['websocket'] })
+    newSocket.emit('auth', currentUser.id)
+    newSocket.emit('join:room', roomId)
+    newSocket.on('chat:message', (msg: any) => {
+      if (msg.roomId === roomId) {
+        setMessages(prev => [...prev, {
+          id: crypto.randomUUID(),
+          user_id: msg.userId,
+          content: msg.content,
+          created_at: msg.created_at,
+          username: msg.username,
+        }])
+      }
+    })
+    setSocket(newSocket)
+
+    return () => {
+      newSocket.emit('leave:room', roomId)
+      newSocket.disconnect()
+    }
   }, [roomId])
 
   const handleSendMessage = (content: string) => {
-    setMessages([...messages, {
-      id: crypto.randomUUID(),
-      user_id: 'me',
-      content,
-      created_at: new Date().toISOString(),
-      username: user.username,
-    }])
+    if (!user) return
+    socket?.emit('chat:message', { roomId, userId: user.id, content })
   }
 
-  if (loading || !room) {
+  if (loading || !room || !user) {
     return (
-      <AuthLayout user={user}>
+      <AuthLayout user={user || null}>
         <div className="animate-pulse space-y-4">
           <div className="h-16 bg-surface rounded-xl"></div>
           <div className="h-96 bg-surface rounded-xl"></div>

@@ -44,7 +44,7 @@ export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null)
 
   useEffect(() => {
-    const userStr = sessionStorage.getItem('user')
+    const userStr = typeof window !== 'undefined' ? sessionStorage.getItem('user') : null
     if (!userStr) {
       window.location.href = '/login'
       return

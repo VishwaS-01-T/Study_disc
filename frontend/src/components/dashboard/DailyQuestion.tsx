@@ -50,7 +50,10 @@ export default function DailyQuestion({ question }: DailyQuestionProps) {
         </div>
       ) : (
         <button
-          onClick={() => setAnswered(false)}
+          onClick={() => {
+            setAnswered(true)
+            setLocked(true)
+          }}
           className="flex items-center gap-2 text-accent text-sm font-medium hover:text-accent2"
         >
           <span>Answer now</span>

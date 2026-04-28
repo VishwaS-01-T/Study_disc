@@ -38,6 +38,12 @@ export default function StudyPlanPage() {
       return
     }
 
+    const exam = new Date(examDate)
+    if (Number.isNaN(exam.getTime()) || exam <= new Date()) {
+      setError('Please choose a future exam date')
+      return
+    }
+
     setLoading(true)
     setError('')
 

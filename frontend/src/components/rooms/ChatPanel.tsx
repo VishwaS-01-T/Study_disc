@@ -33,6 +33,10 @@ export default function ChatPanel({
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    setMessages(initialMessages)
+  }, [initialMessages])
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 

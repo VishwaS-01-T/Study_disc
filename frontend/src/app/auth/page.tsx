@@ -1,15 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
-export default function AuthPage() {
+function AuthContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const errorParam = searchParams.get('error')
     if (errorParam) {
       setError('Authentication failed. Please try again.')
@@ -60,7 +67,7 @@ export default function AuthPage() {
     }
 
     signIn()
-  }, [searchParams, router])
+  }, [searchParams, router, mounted])
 
   if (error) {
     return (
@@ -76,7 +83,19 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-4">
       <Loader2 className="w-8 h-8 text-accent animate-spin" />
-      <p className="mt-4 text-text-secondary">Signing you in...</p>
+      <p className="mt-4 text-text2">Signing you in...</p>
     </div>
+  )
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-bg flex flex-col items-center justify-center p-4">
+        <Loader2 className="w-8 h-8 text-accent animate-spin" />
+      </div>
+    }>
+      <AuthContent />
+    </Suspense>
   )
 }

@@ -28,6 +28,22 @@ export default function TopNav({ user, unreadCount = 0 }: TopNavProps) {
     setMounted(true)
   }, [])
 
+  const handleAcceptDuel = async (duelId: string) => {
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+      await fetch(`${backendUrl}/api/duels/${duelId}/accept`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
+    } catch (err) {
+      console.error('Failed to accept duel:', err)
+    }
+  }
+
+  const handleDeclineDuel = async (duelId: string) => {
+    console.log('Decline duel:', duelId)
+  }
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-surface/80 backdrop-blur-xl border-b border-border">
@@ -50,7 +66,11 @@ export default function TopNav({ user, unreadCount = 0 }: TopNavProps) {
                 )}
               </button>
               {showNotifications && (
-                <NotificationPanel onClose={() => setShowNotifications(false)} />
+                <NotificationPanel 
+                  onClose={() => setShowNotifications(false)}
+                  onAccept={handleAcceptDuel}
+                  onDecline={handleDeclineDuel}
+                />
               )}
             </div>
 

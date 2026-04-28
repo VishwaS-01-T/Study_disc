@@ -15,21 +15,15 @@ interface User {
 export default function LeaderboardPage() {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setTimeout(() => {
-      setUsers([
-        { id: '1', username: 'CodeMaster', score: 5420, level: 12 },
-        { id: '2', username: 'AlgoQueen', score: 4890, level: 11 },
-        { id: '3', username: 'ByteNinja', score: 3650, level: 9 },
-        { id: '4', username: 'DevWiz', score: 2890, level: 8 },
-        { id: '5', username: 'StackOverflow', score: 2450, level: 7 },
-        { id: '6', username: 'GitGuru', score: 2100, level: 6 },
-        { id: '7', username: 'PixelPusher', score: 1890, level: 6 },
-        { id: '8', username: 'DemoUser', score: 1250, level: 5 },
-      ])
-      setLoading(false)
-    }, 300)
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    fetch(`${backendUrl}/api/leaderboard`)
+      .then(res => res.json())
+      .then(data => setUsers(data.leaderboard || []))
+      .catch(() => setError('Failed to load leaderboard'))
+      .finally(() => setLoading(false))
   }, [])
 
   return (
@@ -67,6 +61,8 @@ export default function LeaderboardPage() {
               </div>
             ))}
           </div>
+        ) : error ? (
+          <div className="text-center text-danger">{error}</div>
         ) : (
           <div className="space-y-3">
             {users.map((user, index) => (

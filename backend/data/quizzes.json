@@ -1,0 +1,757 @@
+[
+  {
+    "id": "bf7c6bbc-cbe4-4dc9-b9b2-ecb03b880a9a",
+    "room_id": "029e79dd-752e-43da-b610-ab7dd00330b4",
+    "title": "Vishwas_Resume-draft2",
+    "questions": [
+      {
+        "id": "ab9c9e39-c685-4b4a-b41d-c77ed38343db",
+        "text": "What is a key concept discussed in the notes about complete?",
+        "options": [
+          "Fundamental concept",
+          "Advanced topic",
+          "Optional feature",
+          "Deprecated method"
+        ],
+        "correct": 0,
+        "explanation": "This is a fundamental concept in Vishwas_Resume-draft2.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "c95afc81-d180-4a5b-b8e9-71c7977a2321",
+        "text": "Which of the following is related to •assisted?",
+        "options": [
+          "Primary approach",
+          "Secondary method",
+          "Alternative solution",
+          "Not relevant"
+        ],
+        "correct": 0,
+        "explanation": "This is a primary approach in Vishwas_Resume-draft2.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "ee6ecc9b-2796-4cf8-92c4-5bd6f1e29c44",
+        "text": "In the context of Vishwas_Resume-draft2, what is typically true about esp32?",
+        "options": [
+          "It is essential",
+          "It is optional",
+          "It is discouraged",
+          "It is unknown"
+        ],
+        "correct": 0,
+        "explanation": "This is essential for understanding Vishwas_Resume-draft2.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "7058813e-0979-4512-9a86-19d6f27c2b40",
+        "text": "How would you describe the relationship between concepts in Vishwas_Resume-draft2?",
+        "options": [
+          "Interconnected",
+          "Isolated",
+          "Unrelated",
+          "Hierarchical"
+        ],
+        "correct": 0,
+        "explanation": "Concepts in Vishwas_Resume-draft2 are interconnected.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "f151ccb8-ec12-40e4-aae3-2b9bce896e74",
+        "text": "What is the main focus of owners.?",
+        "options": [
+          "Core functionality",
+          "Edge cases",
+          "Error handling",
+          "Performance"
+        ],
+        "correct": 0,
+        "explanation": "The focus is on core functionality.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "6583fea5-870b-41c9-9932-88be4dfe99d9",
+        "text": "Which statement best describes color?",
+        "options": [
+          "Important concept",
+          "Minor detail",
+          "Unrelated topic",
+          "Future feature"
+        ],
+        "correct": 0,
+        "explanation": "This is an important concept in the subject.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "38224fd1-941d-42a3-ba2a-ab9388a16434",
+        "text": "When studying Vishwas_Resume-draft2, you should understand:",
+        "options": [
+          "All fundamental concepts",
+          "Only advanced topics",
+          "Only examples",
+          "Nothing specific"
+        ],
+        "correct": 0,
+        "explanation": "Fundamentals are key to understanding.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "abd98a2d-32d6-4f03-82cb-6a15bf4be992",
+        "text": "The primary benefit of learning Vishwas_Resume-draft2 is:",
+        "options": [
+          "Problem solving skills",
+          "Nothing specific",
+          "Only theoretical knowledge",
+          "No practical use"
+        ],
+        "correct": 0,
+        "explanation": "It helps develop problem-solving skills.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "e245b07a-f4bd-45e2-b6db-7658b287b236",
+        "text": "In practice, Vishwas_Resume-draft2 requires:",
+        "options": [
+          "Understanding fundamentals",
+          "Memorization only",
+          "No preparation",
+          "Advanced tools only"
+        ],
+        "correct": 0,
+        "explanation": "Understanding fundamentals is essential.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      },
+      {
+        "id": "5f1fdc6f-a65f-414f-84d7-9de66174a408",
+        "text": "The best approach to master Vishwas_Resume-draft2 is:",
+        "options": [
+          "Regular practice",
+          "Quick review",
+          "Skipping basics",
+          "Only reading"
+        ],
+        "correct": 0,
+        "explanation": "Regular practice leads to mastery.",
+        "topic": "Vishwas_Resume-draft2",
+        "question_type": "mcq"
+      }
+    ],
+    "question_count": 10,
+    "type": "generated",
+    "source_text": "\n\nVishwasdeep Singh\nvishwasdeepsingh1234@gmail.com—+91-9872630419\nLinkedin:  vishwasdeep-singh—GitHub:  VishwaS-01-T\nObjective\nCurious  and  tech-driven  first-year  student  passionate  about  coding,  problem-solving,  and  innovation.\nEager to join GDSE to learn modern tools, contribute to real-world projects, and grow as a developer\nthrough collaboration and Google’s developer ecosystem.\nEducation\nB.E. Computer Engineering And Bussiness Systems2024–2028\nThapar Institute of Engineering and Te",
+    "created_at": "2026-04-28T05:44:41.239Z"
+  },
+  {
+    "id": "2456f251-7fa5-4008-9bb8-c81c3c19157e",
+    "room_id": "029e79dd-752e-43da-b610-ab7dd00330b4",
+    "title": "Quiz",
+    "questions": [
+      {
+        "id": "a638c211-c5e8-4dd8-a472-441e356d51e1",
+        "text": "What is a key concept discussed in the notes about –class?",
+        "options": [
+          "Fundamental concept",
+          "Advanced topic",
+          "Optional feature",
+          "Deprecated method"
+        ],
+        "correct": 0,
+        "explanation": "This is a fundamental concept in Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "3f74f7ee-579c-4436-b984-2424f9dd8560",
+        "text": "Which of the following is related to model?",
+        "options": [
+          "Primary approach",
+          "Secondary method",
+          "Alternative solution",
+          "Not relevant"
+        ],
+        "correct": 0,
+        "explanation": "This is a primary approach in Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "6a5d23f6-b675-4dab-96d4-70bb09736c1f",
+        "text": "In the context of Quiz, what is typically true about techniques?",
+        "options": [
+          "It is essential",
+          "It is optional",
+          "It is discouraged",
+          "It is unknown"
+        ],
+        "correct": 0,
+        "explanation": "This is essential for understanding Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "b5b8f5be-cfa5-4b3d-815f-751b74ac13fd",
+        "text": "How would you describe the relationship between concepts in Quiz?",
+        "options": [
+          "Interconnected",
+          "Isolated",
+          "Unrelated",
+          "Hierarchical"
+        ],
+        "correct": 0,
+        "explanation": "Concepts in Quiz are interconnected.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "26ad4205-1668-44e0-a4ad-d713b1f639ae",
+        "text": "What is the main focus of database?",
+        "options": [
+          "Core functionality",
+          "Edge cases",
+          "Error handling",
+          "Performance"
+        ],
+        "correct": 0,
+        "explanation": "The focus is on core functionality.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "f37210aa-7b7b-47c6-bf80-317ea103f06a",
+        "text": "Which statement best describes diagrams?",
+        "options": [
+          "Important concept",
+          "Minor detail",
+          "Unrelated topic",
+          "Future feature"
+        ],
+        "correct": 0,
+        "explanation": "This is an important concept in the subject.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "baa469b9-369e-4681-a734-e267db9ad25c",
+        "text": "When studying Quiz, you should understand:",
+        "options": [
+          "All fundamental concepts",
+          "Only advanced topics",
+          "Only examples",
+          "Nothing specific"
+        ],
+        "correct": 0,
+        "explanation": "Fundamentals are key to understanding.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "48280225-8ce7-4ec0-b747-23bd9ee32b67",
+        "text": "The primary benefit of learning Quiz is:",
+        "options": [
+          "Problem solving skills",
+          "Nothing specific",
+          "Only theoretical knowledge",
+          "No practical use"
+        ],
+        "correct": 0,
+        "explanation": "It helps develop problem-solving skills.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "44aa3228-12f4-4fb6-8076-b460b8b1f971",
+        "text": "In practice, Quiz requires:",
+        "options": [
+          "Understanding fundamentals",
+          "Memorization only",
+          "No preparation",
+          "Advanced tools only"
+        ],
+        "correct": 0,
+        "explanation": "Understanding fundamentals is essential.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "a2c4952b-de25-4f5f-bebf-c302259000fb",
+        "text": "The best approach to master Quiz is:",
+        "options": [
+          "Regular practice",
+          "Quick review",
+          "Skipping basics",
+          "Only reading"
+        ],
+        "correct": 0,
+        "explanation": "Regular practice leads to mastery.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      }
+    ],
+    "question_count": 10,
+    "type": "generated",
+    "source_text": "\n\nWhen goin.. Gets tough,\nTough gets going\nKeep Going.....\n\nObject-Oriented Analysis and Design\nSemi-formal techniques\n–class modeling\n–dynamic modeling\n–functional modeling\nTechniques focus on\n–data\n–actions\n–and their relationships\nReuses familiar\ntools\n–E-R diagrams\n–Finite State\nMachines\n–Data flow\ndiagrams\n• Object-Oriented Analysis is the “requirements phase”\n–an alternative semi-formal technique focused on objects in\nreal world\n• Object-Oriented Design is the “design phase”\n–refine obj",
+    "created_at": "2026-04-28T06:00:58.528Z"
+  },
+  {
+    "id": "f10735d3-876a-4e53-9e1c-0fac2902658d",
+    "room_id": "029e79dd-752e-43da-b610-ab7dd00330b4",
+    "title": "Quiz",
+    "questions": [
+      {
+        "id": "0138c1e3-5c69-416c-ac29-f9ea1f031de5",
+        "text": "What is a key concept discussed in the notes about several?",
+        "options": [
+          "Fundamental concept",
+          "Advanced topic",
+          "Optional feature",
+          "Deprecated method"
+        ],
+        "correct": 0,
+        "explanation": "This is a fundamental concept in Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "66de4db1-6c3d-458e-a7e8-2c4a75bb2e71",
+        "text": "Which of the following is related to methods?",
+        "options": [
+          "Primary approach",
+          "Secondary method",
+          "Alternative solution",
+          "Not relevant"
+        ],
+        "correct": 0,
+        "explanation": "This is a primary approach in Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "ad42cb7e-0765-413c-894e-5d7250978cdb",
+        "text": "In the context of Quiz, what is typically true about mechanism?",
+        "options": [
+          "It is essential",
+          "It is optional",
+          "It is discouraged",
+          "It is unknown"
+        ],
+        "correct": 0,
+        "explanation": "This is essential for understanding Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "8327d245-cfbb-4c39-948d-66b07305d0d8",
+        "text": "How would you describe the relationship between concepts in Quiz?",
+        "options": [
+          "Interconnected",
+          "Isolated",
+          "Unrelated",
+          "Hierarchical"
+        ],
+        "correct": 0,
+        "explanation": "Concepts in Quiz are interconnected.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "743168c9-ed85-4f94-845d-21e42cf49182",
+        "text": "What is the main focus of class...)?",
+        "options": [
+          "Core functionality",
+          "Edge cases",
+          "Error handling",
+          "Performance"
+        ],
+        "correct": 0,
+        "explanation": "The focus is on core functionality.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "5aecbbb6-e050-46bf-a9f9-98eae8a5090d",
+        "text": "Which statement best describes function?",
+        "options": [
+          "Important concept",
+          "Minor detail",
+          "Unrelated topic",
+          "Future feature"
+        ],
+        "correct": 0,
+        "explanation": "This is an important concept in the subject.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "3cf3c94e-35fb-49ca-87c7-3ab741fa261b",
+        "text": "When studying Quiz, you should understand:",
+        "options": [
+          "All fundamental concepts",
+          "Only advanced topics",
+          "Only examples",
+          "Nothing specific"
+        ],
+        "correct": 0,
+        "explanation": "Fundamentals are key to understanding.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "dcb76331-5f0f-4f39-935e-c35312442a92",
+        "text": "The primary benefit of learning Quiz is:",
+        "options": [
+          "Problem solving skills",
+          "Nothing specific",
+          "Only theoretical knowledge",
+          "No practical use"
+        ],
+        "correct": 0,
+        "explanation": "It helps develop problem-solving skills.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "9f62e04f-f722-405a-921c-90177bd27462",
+        "text": "In practice, Quiz requires:",
+        "options": [
+          "Understanding fundamentals",
+          "Memorization only",
+          "No preparation",
+          "Advanced tools only"
+        ],
+        "correct": 0,
+        "explanation": "Understanding fundamentals is essential.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "c6c4ec19-077a-43c0-a73a-9a36b6c98c3e",
+        "text": "The best approach to master Quiz is:",
+        "options": [
+          "Regular practice",
+          "Quick review",
+          "Skipping basics",
+          "Only reading"
+        ],
+        "correct": 0,
+        "explanation": "Regular practice leads to mastery.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      }
+    ],
+    "question_count": 10,
+    "type": "generated",
+    "source_text": "\n\nPut goals in writing. If you can’t\nput it on a sheet of paper ....\nYou probably can’t do it\n\nBasics of Object-Oriented\nAnalysis\nObject-Oriented Concepts and\nRequirements Analysis\nExample/Case Study\n\nVOCABULARY\nClass / method / message / instance\nADT / routine / call    / variable\nOO analysis / design /programming\nlanguage / database\n\nWHAT IS OBJECT\nORIENTATION?\nPrecedence of data over function\nEncapsulation of data behind abstract\ninterfaces in order to hide representation\ndesign decisio",
+    "created_at": "2026-04-28T06:27:23.598Z"
+  },
+  {
+    "id": "01395398-f4cf-4a74-8c17-2b76b3959614",
+    "room_id": "029e79dd-752e-43da-b610-ab7dd00330b4",
+    "title": "Quiz",
+    "questions": [
+      {
+        "id": "b5bbe6b7-7e21-438e-abdc-243ae7b8f598",
+        "text": "What is a key concept discussed in the notes about modeled?",
+        "options": [
+          "Fundamental concept",
+          "Advanced topic",
+          "Optional feature",
+          "Deprecated method"
+        ],
+        "correct": 0,
+        "explanation": "This is a fundamental concept in Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "a6b417f6-8d2a-4a6c-a064-a254034aba8f",
+        "text": "Which of the following is related to members?",
+        "options": [
+          "Primary approach",
+          "Secondary method",
+          "Alternative solution",
+          "Not relevant"
+        ],
+        "correct": 0,
+        "explanation": "This is a primary approach in Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "5cc96556-38f5-41e1-9111-b74367cc3f8a",
+        "text": "In the context of Quiz, what is typically true about performed.?",
+        "options": [
+          "It is essential",
+          "It is optional",
+          "It is discouraged",
+          "It is unknown"
+        ],
+        "correct": 0,
+        "explanation": "This is essential for understanding Quiz.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "c8cdc6a0-3f26-4851-a6e0-6f58eae65152",
+        "text": "How would you describe the relationship between concepts in Quiz?",
+        "options": [
+          "Interconnected",
+          "Isolated",
+          "Unrelated",
+          "Hierarchical"
+        ],
+        "correct": 0,
+        "explanation": "Concepts in Quiz are interconnected.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "0d2d76e9-3b51-44ec-afbf-1172de9a75fe",
+        "text": "What is the main focus of access?",
+        "options": [
+          "Core functionality",
+          "Edge cases",
+          "Error handling",
+          "Performance"
+        ],
+        "correct": 0,
+        "explanation": "The focus is on core functionality.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "e83ce60d-da70-406d-a2e2-063128bdaf4b",
+        "text": "Which statement best describes declared.?",
+        "options": [
+          "Important concept",
+          "Minor detail",
+          "Unrelated topic",
+          "Future feature"
+        ],
+        "correct": 0,
+        "explanation": "This is an important concept in the subject.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "02b4f4a3-cb86-49a2-a92e-6ff0c721d603",
+        "text": "When studying Quiz, you should understand:",
+        "options": [
+          "All fundamental concepts",
+          "Only advanced topics",
+          "Only examples",
+          "Nothing specific"
+        ],
+        "correct": 0,
+        "explanation": "Fundamentals are key to understanding.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "7ef2b0f5-9cb1-4a85-a6de-54ca487e3be6",
+        "text": "The primary benefit of learning Quiz is:",
+        "options": [
+          "Problem solving skills",
+          "Nothing specific",
+          "Only theoretical knowledge",
+          "No practical use"
+        ],
+        "correct": 0,
+        "explanation": "It helps develop problem-solving skills.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "ce747ad3-0eba-4299-872b-d3631ded9dfc",
+        "text": "In practice, Quiz requires:",
+        "options": [
+          "Understanding fundamentals",
+          "Memorization only",
+          "No preparation",
+          "Advanced tools only"
+        ],
+        "correct": 0,
+        "explanation": "Understanding fundamentals is essential.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "9a8fa47c-7752-4690-a942-46ec45ca535a",
+        "text": "The best approach to master Quiz is:",
+        "options": [
+          "Regular practice",
+          "Quick review",
+          "Skipping basics",
+          "Only reading"
+        ],
+        "correct": 0,
+        "explanation": "Regular practice leads to mastery.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      }
+    ],
+    "question_count": 10,
+    "type": "generated",
+    "source_text": "Put goals in writing. If you can t\nput it on a sheet of paper ....\nYou probably can t do it\n\nBasics of Object-Oriented\nAnalysis\nObject-Oriented Concepts and\nRequirements Analysis\nExample/Case Study\n\nVOCABULARY\n Class / method / message / instance\n ADT / routine / call / variable\n OO analysis / design /programming\n language / database\n\nWHAT IS OBJECT\nORIENTATION?\n Precedence of data over function\n Encapsulation of data behind abstract\ninterfaces in order to hide representation\ndesign decisions\n R",
+    "created_at": "2026-04-28T06:53:35.587Z"
+  },
+  {
+    "id": "ed7c804a-1a3f-4d41-b4dd-a69f99c4e9c5",
+    "room_id": "029e79dd-752e-43da-b610-ab7dd00330b4",
+    "title": "Quiz",
+    "questions": [
+      {
+        "id": "3292196b-8c31-49c7-8ccf-920aedca8be2",
+        "text": "In the notes about Quiz, what is discussed regarding \"put\"?",
+        "options": [
+          "If you can t\nput it on a sheet of paper",
+          "A computing unit organized around a\ncollection ofstateorinstancevariables\n Each object has associated with it a set of\noperations / methods / behavior",
+          "Operations\nare invoked by sending amessageto the\nappropriate object\n\nWHY USE OBJECTS",
+          "Not mentioned"
+        ],
+        "correct": 0,
+        "explanation": "This is mentioned in the provided text.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "12c7c20f-7343-4f44-adac-7623e592d93a",
+        "text": "Which idea is presented in the Quiz material?",
+        "options": [
+          "A computing unit organized around a\ncollection ofstateorinstancevariables\n Each object has associated with it a set of\noperations / methods / behavior",
+          "If you can t\nput it on a sheet of paper",
+          "Operations\nare invoked by sending amessageto the\nappropriate object\n\nWHY USE OBJECTS",
+          "No clear idea"
+        ],
+        "correct": 0,
+        "explanation": "The text presents this.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "ba524e78-3853-4c15-b8d6-b8929e680812",
+        "text": "Based on the uploaded content, if refers to:",
+        "options": [
+          "Operations\nare invoked by sending amessageto the\nappropriate object\n\nWHY USE OBJECTS",
+          "Reduced long-term maintenance costs by limiting\nthe effects of change",
+          "It is more likely for the\nfunctions provided by a software system to change\nthan are its major data items",
+          "No meaning"
+        ],
+        "correct": 0,
+        "explanation": "This matches the content.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "404d4582-dd26-4885-b4dd-ceb4844da58d",
+        "text": "The notes indicate that Quiz is:",
+        "options": [
+          "Reduced long-term maintenance costs by limiting\nthe effects of change",
+          "It is more likely for the\nfunctions provided by a software system to change\nthan are its major data items",
+          "That is, they have\nconcentrated on the functions that need to be\nperformed",
+          "Irrelevant"
+        ],
+        "correct": 0,
+        "explanation": "The material indicates this.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "5c974516-1037-4677-8fe6-eadf9ba5f9cb",
+        "text": "What does the Quiz content explain?",
+        "options": [
+          "It is more likely for the\nfunctions provided by a software system to change\nthan are its major data items",
+          "That is, they have\nconcentrated on the functions that need to be\nperformed",
+          "The data upon which the functions\noperate are secondary to the functions themselves\n Object-oriented analysis is primarily concerned\nwith the data objects",
+          "No explanation"
+        ],
+        "correct": 0,
+        "explanation": "This is explained in the text.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "285ab749-f2d7-44d0-92fe-d71f8962121f",
+        "text": "A key point from the Quiz notes is:",
+        "options": [
+          "That is, they have\nconcentrated on the functions that need to be\nperformed",
+          "The data upon which the functions\noperate are secondary to the functions themselves\n Object-oriented analysis is primarily concerned\nwith the data objects",
+          "If you can t\nput it on a sheet of paper",
+          "No point"
+        ],
+        "correct": 0,
+        "explanation": "This is highlighted.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "53feb57c-e909-4ca7-8b9c-6da99a765361",
+        "text": "The Quiz material covers:",
+        "options": [
+          "The data upon which the functions\noperate are secondary to the functions themselves\n Object-oriented analysis is primarily concerned\nwith the data objects",
+          "These are defined first in\nterms of their component and data types",
+          "A computing unit organized around a\ncollection ofstateorinstancevariables\n Each object has associated with it a set of\noperations / methods / behavior",
+          "No coverage"
+        ],
+        "correct": 0,
+        "explanation": "The material covers this.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "53c20fd5-2f2d-4be2-ac23-69eac9673665",
+        "text": "According to the text, you involves:",
+        "options": [
+          "These are defined first in\nterms of their component and data types",
+          "If you can t\nput it on a sheet of paper",
+          "Operations\nare invoked by sending amessageto the\nappropriate object\n\nWHY USE OBJECTS",
+          "Nothing specific"
+        ],
+        "correct": 0,
+        "explanation": "This is in the source.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "fa43fc4d-3013-485a-aa3e-5b7bd080e690",
+        "text": "The primary purpose of the Quiz content is:",
+        "options": [
+          "If you can t\nput it on a sheet of paper",
+          "A computing unit organized around a\ncollection ofstateorinstancevariables\n Each object has associated with it a set of\noperations / methods / behavior",
+          "Reduced long-term maintenance costs by limiting\nthe effects of change",
+          "Hidden purpose"
+        ],
+        "correct": 0,
+        "explanation": "This is the main purpose.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      },
+      {
+        "id": "65a6d5c6-aede-4c9c-b485-7564b8a58274",
+        "text": "To summarize the Quiz notes:",
+        "options": [
+          "A computing unit organized around a\ncollection ofstateorinstancevariables\n Each object has associated with it a set of\noperations / methods / behavior",
+          "Operations\nare invoked by sending amessageto the\nappropriate object\n\nWHY USE OBJECTS",
+          "It is more likely for the\nfunctions provided by a software system to change\nthan are its major data items",
+          "No summary"
+        ],
+        "correct": 0,
+        "explanation": "This summarizes the content.",
+        "topic": "Quiz",
+        "question_type": "mcq"
+      }
+    ],
+    "question_count": 10,
+    "type": "generated",
+    "source_text": "Put goals in writing. If you can t\nput it on a sheet of paper ....\nYou probably can t do it\n\nBasics of Object-Oriented\nAnalysis\nObject-Oriented Concepts and\nRequirements Analysis\nExample/Case Study\n\nVOCABULARY\n Class / method / message / instance\n ADT / routine / call / variable\n OO analysis / design /programming\n language / database\n\nWHAT IS OBJECT\nORIENTATION?\n Precedence of data over function\n Encapsulation of data behind abstract\ninterfaces in order to hide representation\ndesign decisions\n R",
+    "created_at": "2026-04-28T07:29:23.833Z"
+  }
+]

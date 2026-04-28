@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Trophy, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -16,11 +17,22 @@ interface LeaderboardPeekProps {
 }
 
 export default function LeaderboardPeek({ topUsers = [], currentUserRank }: LeaderboardPeekProps) {
-  const defaultUsers = topUsers.length > 0 ? topUsers : [
-    { id: '1', username: 'Priya', score: 1240 },
-    { id: '2', username: 'Raj', score: 980 },
-    { id: '3', username: 'Dev', score: 860 },
-  ]
+  const [leaders, setLeaders] = useState<LeaderboardUser[]>(topUsers)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (topUsers.length > 0) {
+      setLeaders(topUsers)
+      setLoading(false)
+      return
+    }
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:4000'
+    fetch(`${backendUrl}/api/leaderboard`)
+      .then(res => res.json())
+      .then(data => setLeaders((data.leaderboard || []).slice(0, 3)))
+      .catch(() => setLeaders([]))
+      .finally(() => setLoading(false))
+  }, [topUsers])
 
   return (
     <div className="space-y-3">
@@ -35,7 +47,11 @@ export default function LeaderboardPeek({ topUsers = [], currentUserRank }: Lead
       </div>
       
       <div className="space-y-2">
-        {defaultUsers.map((user, index) => (
+        {loading ? (
+          <div className="text-sm text-text3">Loading leaderboard...</div>
+        ) : leaders.length === 0 ? (
+          <div className="text-sm text-text3">No rankings yet</div>
+        ) : leaders.map((user, index) => (
           <div
             key={user.id}
             className={cn(

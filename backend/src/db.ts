@@ -47,6 +47,22 @@ export const db = {
     findAll: () => readTable('users').sort((a, b) => (b.score || 0) - (a.score || 0)),
   },
 
+  room_members: {
+    findByRoomId: (roomId: string) => readTable('room_members').filter(m => m.room_id === roomId),
+    findByUserId: (userId: string) => readTable('room_members').filter(m => m.user_id === userId),
+    add: (roomId: string, userId: string) => {
+      const members = readTable('room_members')
+      const exists = members.some(m => m.room_id === roomId && m.user_id === userId)
+      if (!exists) {
+        const record = { id: `${roomId}:${userId}`, room_id: roomId, user_id: userId, joined_at: new Date().toISOString() }
+        members.push(record)
+        writeTable('room_members', members)
+        return record
+      }
+      return members.find(m => m.room_id === roomId && m.user_id === userId)
+    },
+  },
+
   rooms: {
     findById: (id: string) => readTable('rooms').find(r => r.id === id),
     findByInviteCode: (code: string) => readTable('rooms').find(r => r.invite_code === code),
@@ -75,11 +91,33 @@ export const db = {
 
   quizzes: {
     findByRoomId: (roomId: string) => readTable('quizzes').filter(q => q.room_id === roomId),
+    findById: (id: string) => readTable('quizzes').find(q => q.id === id),
+    findAll: () => readTable('quizzes'),
     create: (quiz: any) => {
       const quizzes = readTable('quizzes')
       quizzes.push(quiz)
       writeTable('quizzes', quizzes)
       return quiz
+    },
+    delete: (id: string) => {
+      const quizzes = readTable('quizzes')
+      const filtered = quizzes.filter(q => q.id !== id)
+      const deleted = filtered.length !== quizzes.length
+      if (deleted) {
+        writeTable('quizzes', filtered)
+      }
+      return deleted
+    },
+  },
+
+  quiz_attempts: {
+    findByUserId: (userId: string) => readTable('quiz_attempts').filter(a => a.user_id === userId),
+    findByQuizId: (quizId: string) => readTable('quiz_attempts').filter(a => a.quiz_id === quizId),
+    create: (attempt: any) => {
+      const attempts = readTable('quiz_attempts')
+      attempts.push(attempt)
+      writeTable('quiz_attempts', attempts)
+      return attempt
     },
   },
 
@@ -102,6 +140,47 @@ export const db = {
         return duels[index]
       }
       return null
+    },
+  },
+
+  duel_submissions: {
+    findByDuelId: (duelId: string) => readTable('duel_submissions').filter(s => s.duel_id === duelId),
+    findByDuelAndUser: (duelId: string, userId: string) => readTable('duel_submissions').find(s => s.duel_id === duelId && s.user_id === userId),
+    create: (submission: any) => {
+      const submissions = readTable('duel_submissions')
+      submissions.push(submission)
+      writeTable('duel_submissions', submissions)
+      return submission
+    },
+    update: (duelId: string, userId: string, updates: any) => {
+      const submissions = readTable('duel_submissions')
+      const index = submissions.findIndex(s => s.duel_id === duelId && s.user_id === userId)
+      if (index !== -1) {
+        submissions[index] = { ...submissions[index], ...updates }
+        writeTable('duel_submissions', submissions)
+        return submissions[index]
+      }
+      return null
+    },
+  },
+
+  room_resources: {
+    findByRoomId: (roomId: string) => readTable('room_resources').filter(r => r.room_id === roomId),
+    create: (resource: any) => {
+      const resources = readTable('room_resources')
+      resources.push(resource)
+      writeTable('room_resources', resources)
+      return resource
+    },
+  },
+
+  badges: {
+    findByUserId: (userId: string) => readTable('badges').filter(b => b.user_id === userId),
+    create: (badge: any) => {
+      const badges = readTable('badges')
+      badges.push(badge)
+      writeTable('badges', badges)
+      return badge
     },
   },
 
